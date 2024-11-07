@@ -39,7 +39,7 @@ app = FastAPI(title="Book Chatbot API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://bot-test-weld-seven.vercel.app"],  # Add your Vercel domain here
+    allow_origins=["https://bot-test-weld-seven.vercel.app/query"],  # Add your Vercel domain here
     allow_credentials=True,
     allow_methods=["*"],  # Allow all HTTP methods
     allow_headers=["*"],  # Allow all headers
