@@ -50,7 +50,7 @@ app.add_middleware(
 )
 
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+#app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
@@ -240,7 +240,7 @@ async def query_chatbot(request: QueryRequest):
 
 @app.get("/")
 async def read_root():
-    return FileResponse('templates/index.html')
+    return "Hello world"
 
 def main():
     """Main function to process book and initialize chatbot"""
