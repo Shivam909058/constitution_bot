@@ -56,7 +56,10 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 
-chroma_client = chromadb.PersistentClient(path="./chroma_db")
+
+chroma_client = chromadb.PersistentClient(
+    path="/tmp/chroma_db"  
+)
 collection = chroma_client.get_or_create_collection(
     name="book_embeddings",
     metadata={"hnsw:space": "cosine"}
@@ -226,59 +229,46 @@ class QueryRequest(BaseModel):
 
 @app.post("/query/")
 async def query_chatbot(request: QueryRequest):
-    """API endpoint for querying the chatbot"""
     try:
         query = request.query
         relevant_text = retrieve_relevant_text(query)
         chatbot_response = generate_chatbot_response(relevant_text, query)
         return {"response": chatbot_response, "status": "success"}
     except Exception as e:
-        logger.error(f"Error processing query: {e}")
-        return {"response": "An error occurred processing your query.", 
-                "status": "error", 
-                "error": str(e)}
+        logger.error(f"Error processing query: {str(e)}")  # Add detailed logging
+        return {
+            "response": "Sorry, I encountered an error while processing your request.",
+            "status": "error",
+            "error_details": str(e)  
+        }
 
 @app.get("/")
 async def read_root():
     return FileResponse('templates/index.html')
 
 def main():
-    """Main function to process book and initialize chatbot"""
     try:
-        logger.info("Starting book processing...")
-        log_memory_usage()
-        
-        # Step 1: Convert PDF to text
-        save_progress("pdf_conversion", False)
+        # Initialize necessary components
         pdf_path = 'cons.pdf'
+        if not os.path.exists(pdf_path):
+            logger.error(f"PDF file not found: {pdf_path}")
+            return
+            
+        # Process the book
         book_text = pdf_to_text(pdf_path)
-        save_progress("pdf_conversion", True)
-        
-        # Step 2: Clean the text
-        save_progress("text_cleaning", False)
         cleaned_text = clean_text(book_text)
-        save_progress("text_cleaning", True)
-        
-        # Step 3: Chunk the text
-        save_progress("text_chunking", False)
         text_chunks = chunk_text(cleaned_text)
-        save_progress("text_chunking", True)
         
-        # Step 4: Generate embeddings
-        save_progress("embedding_generation", False)
-        embeddings = create_embeddings_batch(text_chunks)
-        save_progress("embedding_generation", True)
-        
-        # Step 5: Store in ChromaDB
-        save_progress("database_storage", False)
-        store_embeddings_in_db(text_chunks, embeddings)
-        save_progress("database_storage", True)
-        
-        logger.info("Processing complete! The chatbot is ready to use.")
-        log_memory_usage()
+        # Check if data exists in ChromaDB
+        if collection.count() == 0:
+            logger.info("Initializing database with book content...")
+            embeddings = create_embeddings_batch(text_chunks)
+            store_embeddings_in_db(text_chunks, embeddings)
+            
+        logger.info("Application ready!")
         
     except Exception as e:
-        logger.error(f"An error occurred in main processing: {e}")
+        logger.error(f"Initialization error: {str(e)}")
         raise
 
 if __name__ == "__main__":
