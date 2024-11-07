@@ -1,0 +1,43 @@
+2024-11-07 23:41:41,777 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:41:42,042 - INFO - Starting book processing...
+2024-11-07 23:41:42,042 - INFO - Memory usage: 229.66 MB
+2024-11-07 23:41:42,074 - INFO - Processing 402 pages
+2024-11-07 23:41:42,110 - INFO - Memory usage: 232.98 MB
+2024-11-07 23:41:43,380 - INFO - Memory usage: 236.46 MB
+2024-11-07 23:41:44,919 - INFO - Memory usage: 239.84 MB
+2024-11-07 23:41:46,394 - INFO - Memory usage: 244.75 MB
+2024-11-07 23:41:47,746 - INFO - Memory usage: 250.05 MB
+2024-11-07 23:41:49,281 - INFO - Memory usage: 252.64 MB
+2024-11-07 23:41:50,871 - INFO - Memory usage: 253.17 MB
+2024-11-07 23:41:52,380 - INFO - Memory usage: 254.32 MB
+2024-11-07 23:41:53,620 - INFO - Memory usage: 254.58 MB
+2024-11-07 23:41:53,637 - INFO - Cleaning text...
+2024-11-07 23:41:53,667 - INFO - Chunking text...
+2024-11-07 23:41:57,885 - INFO - Created 79 chunks
+2024-11-07 23:42:02,067 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2024-11-07 23:42:03,473 - INFO - Processing complete! The chatbot is ready to use.
+2024-11-07 23:42:03,473 - INFO - Memory usage: 319.82 MB
+2024-11-07 23:42:47,704 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:43:46,300 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:43:57,532 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:44:18,581 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2024-11-07 23:44:32,538 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-07 23:45:10,940 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2024-11-07 23:45:16,378 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-07 23:47:41,186 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2024-11-07 23:47:46,333 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-07 23:48:45,028 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2024-11-07 23:48:51,356 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-07 23:49:37,769 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2024-11-07 23:49:44,164 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2024-11-07 23:50:07,972 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:50:14,195 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:50:42,097 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:50:48,505 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:50:55,072 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:52:00,773 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:52:07,164 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:52:13,285 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:52:42,056 - INFO - Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+2024-11-07 23:53:34,690 - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2024-11-07 23:53:56,719 - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
