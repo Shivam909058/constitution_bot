@@ -55,7 +55,7 @@ app.add_middleware(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Initialize OpenAI client
-client = OpenAI(api_key="sk-0QP1JzqwzxNFO7J2b49S7nLNMUgpmPmRPz9RuQ6NHIT3BlbkFJGOuiDZoqjPE5V7ENVH4_9cVkv9a7yBBKCVKyFtD34A")
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 # Initialize ChromaDB client
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
