@@ -21,14 +21,13 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 
-# Load environment variables
+
 load_dotenv()
 
-# Download NLTK stopwords
+
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 
-# Setup logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -39,25 +38,24 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Initialize FastAPI app
 app = FastAPI(title="Book Chatbot API")
 
-# Add these lines after creating the FastAPI app
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, replace with your frontend domain
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Mount the static directory
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-# Initialize OpenAI client
+
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-# Initialize ChromaDB client
+
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
 collection = chroma_client.get_or_create_collection(
     name="book_embeddings",
@@ -99,13 +97,13 @@ def clean_text(text):
     """Clean and preprocess text"""
     logger.info("Cleaning text...")
     
-    # Remove non-alphabetic characters
+    
     text = re.sub(r'[^A-Za-z\s]', '', text)
     
-    # Convert to lowercase
+   
     text = text.lower()
     
-    # Remove stopwords
+   
     words = text.split()
     words = [word for word in words if word not in stop_words]
     
