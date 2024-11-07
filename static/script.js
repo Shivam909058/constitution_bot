@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatMessages = document.getElementById('chat-messages');
     
     // Use the deployed URL
-    const API_URL = 'https://seashell-app-794qt.ondigitalocean.app';
+    const API_URL = 'https://seashell-app-u2veg.ondigitalocean.app';
 
     function addMessage(message, isUser = false) {
         const messageDiv = document.createElement('div');
