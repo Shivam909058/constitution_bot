@@ -4,7 +4,7 @@ import nltk
 from nltk.corpus import stopwords
 from openai import OpenAI
 import chromadb
-from fastapi import FastAPI
+from fastapi import FastAPI, BackgroundTasks
 from pydantic import BaseModel
 from typing import List
 from tqdm import tqdm
@@ -17,13 +17,10 @@ import os
 from dotenv import load_dotenv
 import json
 import psutil
-from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
 
 
 load_dotenv()
-
 
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
@@ -40,7 +37,6 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Book Chatbot API")
 
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -49,12 +45,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-#app.mount("/static", StaticFiles(directory="static"), name="static")
-
-
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-
 
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
 collection = chroma_client.get_or_create_collection(
@@ -97,13 +88,8 @@ def clean_text(text):
     """Clean and preprocess text"""
     logger.info("Cleaning text...")
     
-    
     text = re.sub(r'[^A-Za-z\s]', '', text)
-    
-   
     text = text.lower()
-    
-   
     words = text.split()
     words = [word for word in words if word not in stop_words]
     
@@ -135,7 +121,7 @@ def chunk_text(text, max_tokens=1000):
     logger.info(f"Created {len(chunks)} chunks")
     return chunks
 
-def create_embeddings_batch(chunks, batch_size=100):
+def create_embeddings_batch(chunks, batch_size=20):
     """Create embeddings in batches"""
     all_embeddings = []
     retry_delay = 60  # seconds
@@ -155,13 +141,14 @@ def create_embeddings_batch(chunks, batch_size=100):
             except Exception as e:
                 logger.error(f"Error processing batch {i}, attempt {attempt + 1}: {e}")
                 if attempt < max_retries - 1:
+                    retry_delay *= 2
                     time.sleep(retry_delay)
                 else:
                     raise
     
     return all_embeddings
 
-def store_embeddings_in_db(text_chunks, embeddings, batch_size=500):
+def store_embeddings_in_db(text_chunks, embeddings, batch_size=100):
     """Store embeddings in ChromaDB"""
     for i in tqdm(range(0, len(text_chunks), batch_size), desc="Storing in ChromaDB"):
         batch_texts = text_chunks[i:i + batch_size]
@@ -189,7 +176,6 @@ def retrieve_relevant_text(query, n_results=5):
     documents = results['documents'][0]
     distances = results['distances'][0]
     
-    # Combine chunks with distance scores
     context = "\n\n".join([f"[Relevance: {1 - dist:.2f}] {doc}" 
                           for doc, dist in zip(documents, distances)])
     
@@ -210,7 +196,7 @@ def generate_chatbot_response(relevant_text, user_query):
         response = client.chat.completions.create(
             model="gpt-4-turbo-preview",
             messages=[
-                {"role": "system", "content": "You are a knowledgeable assistant helping users understand the content of a book. Provide accurate, relevant information based on the context provided."},
+                {"role": "system", "content": "You are a knowledgeable assistant helping users understand the content of a book."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.7,
@@ -225,7 +211,7 @@ class QueryRequest(BaseModel):
     query: str
 
 @app.post("/query/")
-async def query_chatbot(request: QueryRequest):
+async def query_chatbot(request: QueryRequest, background_tasks: BackgroundTasks):
     """API endpoint for querying the chatbot"""
     try:
         query = request.query
@@ -234,9 +220,7 @@ async def query_chatbot(request: QueryRequest):
         return {"response": chatbot_response, "status": "success"}
     except Exception as e:
         logger.error(f"Error processing query: {e}")
-        return {"response": "An error occurred processing your query.", 
-                "status": "error", 
-                "error": str(e)}
+        return {"response": "An error occurred processing your query.", "status": "error", "error": str(e)}
 
 @app.get("/")
 async def read_root():
