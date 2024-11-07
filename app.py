@@ -20,6 +20,7 @@ import psutil
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from datetime import datetime
 
 
 load_dotenv()
@@ -245,6 +246,19 @@ async def query_chatbot(request: QueryRequest):
 @app.get("/")
 async def read_root():
     return FileResponse('templates/index.html')
+
+@app.get("/static/script.js")
+async def serve_script():
+    headers = {
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+    }
+    return FileResponse(
+        'static/script.js',
+        media_type='application/javascript',
+        headers=headers
+    )
 
 def main():
     try:
