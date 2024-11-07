@@ -141,4 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
     clearButton.onclick = clearChat;
     document.querySelector('.chat-header').appendChild(clearButton);
     
+
 });
+
