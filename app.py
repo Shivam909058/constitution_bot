@@ -44,7 +44,7 @@ app = FastAPI(title="Book Chatbot API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://seashell-app-794qt.ondigitalocean.app"],  
+    allow_origins=["https://seashell-app-u2veg.ondigitalocean.app/"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
