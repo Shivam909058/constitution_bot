@@ -39,11 +39,12 @@ app = FastAPI(title="Book Chatbot API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://bot-test-weld-seven.vercel.app/query"],  # Add your Vercel domain here
+    allow_origins=["*"],  # Allow all origins in development (adjust for production)
     allow_credentials=True,
-    allow_methods=["*"],  # Allow all HTTP methods
-    allow_headers=["*"],  # Allow all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
+
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
@@ -221,7 +222,6 @@ async def query_chatbot(request: QueryRequest, background_tasks: BackgroundTasks
     except Exception as e:
         logger.error(f"Error processing query: {e}")
         return {"response": "An error occurred processing your query.", "status": "error", "error": str(e)}
-
 @app.get("/")
 async def read_root():
     return "Hello world"
