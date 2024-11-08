@@ -37,14 +37,23 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Book Chatbot API")
 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import os
+
+# Get allowed origins from environment variable
+allowed_origins = os.getenv("CORS_ORIGINS", "https://bot-test-weld-seven.vercel.app").split(",")
+
+app = FastAPI(title="Book Chatbot API")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://bot-test-weld-seven.vercel.app"],  # Your Vercel frontend domain
+    allow_origins=allowed_origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],  # Explicitly specify allowed methods
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
     expose_headers=["*"],
-    max_age=3600,  # Cache preflight requests for 1 hour
+    max_age=3600,
 )
 
 @app.options("/query")  # Handle OPTIONS preflight request
