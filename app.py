@@ -39,11 +39,17 @@ app = FastAPI(title="Book Chatbot API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins in development (adjust for production)
+    allow_origins=["https://bot-test-weld-seven.vercel.app"],  # Your Vercel frontend domain
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],  # Explicitly specify allowed methods
     allow_headers=["*"],
+    expose_headers=["*"],
+    max_age=3600,  # Cache preflight requests for 1 hour
 )
+
+@app.options("/query")  # Handle OPTIONS preflight request
+async def options_query():
+    return {}
 
 
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
