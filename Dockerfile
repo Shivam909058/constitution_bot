@@ -7,11 +7,11 @@ COPY . /app
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Expose port 8080 (this is for documentation purposes)
-EXPOSE 8080
-
-# Set a default value for PORT, which can be overridden by the deployment environment
+# Set the default port to 8080, which can be overridden
 ENV PORT 8080
 
-# Use an entrypoint to dynamically pass the port
-CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port $PORT"]
+# Expose the port for Docker purposes (internal documentation)
+EXPOSE 8080
+
+# Run Uvicorn with dynamic port handling
+CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT}"]
