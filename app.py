@@ -19,12 +19,14 @@ import json
 import psutil
 from fastapi.middleware.cors import CORSMiddleware
 
-
+# Load environment variables
 load_dotenv()
 
+# Download stopwords for text processing
 nltk.download('stopwords')
 stop_words = set(stopwords.words('english'))
 
+# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s',
@@ -35,16 +37,11 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Initialize FastAPI app
 app = FastAPI(title="Book Chatbot API")
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-import os
-
-# Get allowed origins from environment variable
+# Handle CORS issues
 allowed_origins = os.getenv("CORS_ORIGINS", "https://bot-test-weld-seven.vercel.app").split(",")
-
-app = FastAPI(title="Book Chatbot API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -60,15 +57,15 @@ app.add_middleware(
 async def options_query():
     return {}
 
-
+# Initialize OpenAI and ChromaDB clients
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
 collection = chroma_client.get_or_create_collection(
     name="book_embeddings",
     metadata={"hnsw:space": "cosine"}
 )
 
+# Utility functions
 def log_memory_usage():
     """Log current memory usage"""
     process = psutil.Process()
@@ -223,9 +220,11 @@ def generate_chatbot_response(relevant_text, user_query):
         logger.error(f"Error generating response: {e}")
         return "I apologize, but I encountered an error generating the response. Please try again."
 
+# Pydantic model for query requests
 class QueryRequest(BaseModel):
     query: str
 
+# API endpoint for querying the chatbot
 @app.post("/query/")
 async def query_chatbot(request: QueryRequest, background_tasks: BackgroundTasks):
     """API endpoint for querying the chatbot"""
@@ -237,10 +236,13 @@ async def query_chatbot(request: QueryRequest, background_tasks: BackgroundTasks
     except Exception as e:
         logger.error(f"Error processing query: {e}")
         return {"response": "An error occurred processing your query.", "status": "error", "error": str(e)}
+
+# Root endpoint for testing
 @app.get("/")
 async def read_root():
     return "Hello world"
 
+# Main function to process book and initialize chatbot
 def main():
     """Main function to process book and initialize chatbot"""
     try:
@@ -277,8 +279,7 @@ def main():
         log_memory_usage()
         
     except Exception as e:
-        logger.error(f"An error occurred in main processing: {e}")
-        raise
+        logger.error(f"Error in main process: {e}")
 
 if __name__ == "__main__":
     main()
